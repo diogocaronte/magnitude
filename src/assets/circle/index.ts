@@ -1,12 +1,4 @@
-export type ICircleAppearence = {
-    fillColor: string;
-    strokeColor: string;
-};
-
-export enum CircleAppearenceEnum {
-    RED,
-    BLUE,
-}
+import { CircleAppearenceEnum, ICircleAppearence } from './types';
 
 export const CircleAppearences: ICircleAppearence[] = [];
 

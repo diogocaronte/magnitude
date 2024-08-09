@@ -1,15 +1,9 @@
 import { addEntity, IWorld } from 'bitecs';
-import { CircleAppearenceEnum } from '../assets/circle';
-import { addCircleAppearence } from '../components/circle/appearence';
-import { addPosition } from '../components/position';
-import { addRadius } from '../components/radius';
-
-export type CircleProps = {
-    x: number;
-    y: number;
-    radius: number;
-    appearence: CircleAppearenceEnum;
-};
+import { CircleAppearenceEnum } from '../../assets/circle/types';
+import { addCircleAppearence } from '../../components/circle/appearence';
+import { addPosition } from '../../components/position';
+import { addRadius } from '../../components/radius';
+import { CircleProps } from './types';
 
 export function createCircle(
     world: IWorld,
