@@ -8,6 +8,7 @@ import { CanvasTexture } from '../../core/texture/canvas';
 import { createCircle } from '../../entities/circle';
 import { createMovement } from '../../systems/movement';
 import { createRenderer } from '../../systems/renderer';
+import { Camera } from '../../systems/renderer/camera';
 import { createTTL } from '../../systems/ttl';
 import { CircleSceneProps } from './types';
 
@@ -15,6 +16,7 @@ export class CircleScene implements Scene {
     application: Application;
     screen: CanvasTexture;
     world: IWorld;
+    camera: Camera;
 
     updateSystems: (...input: any[]) => any;
     renderSystems: (...input: any[]) => any;
@@ -24,14 +26,13 @@ export class CircleScene implements Scene {
         this.screen = new CanvasTexture();
 
         this.world = createWorld();
-        this.renderSystems = pipe(createRenderer(this.world, this.screen.context));
+        this.camera = new Camera();
+        this.renderSystems = pipe(createRenderer({ world: this.world, context: this.screen.context, camera: this.camera }));
         this.updateSystems = pipe(createMovement(this.world), createTTL(this.world));
     }
 
     spawnRandomCircle = () => {
         const circle = createCircle(this.world, {
-            x: this.screen.texture.width / 2,
-            y: this.screen.texture.height / 2,
             appearence: Math.random() > 0.5 ? CircleAppearenceEnum.RED : CircleAppearenceEnum.BLUE,
         });
         addTTL(this.world, circle, Math.random() * 300); // 5 segundos
