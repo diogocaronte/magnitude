@@ -1,15 +1,23 @@
 import { defineQuery } from 'bitecs';
 import { CircleAppearences } from '../../assets/circle';
+import { CircleAppearenceEnum } from '../../assets/circle/types';
 import { CircleAppearence } from '../../components/circle/appearence';
+import { CircleCollision } from '../../components/circle/collision';
 import { Position } from '../../components/position';
 import { Radius } from '../../components/radius';
 import { TWO_PI } from '../../utils/math';
 import { RendererProps } from './types';
 
-export function createRenderer({ world, context, camera }: RendererProps) {
+export function createRenderer({ world, context, camera, circleInstances }: RendererProps) {
     const circles = defineQuery([Position, Radius, CircleAppearence]);
+    const circlesCollision = defineQuery([Position, Radius, CircleAppearence, CircleCollision]);
 
     return () => {
+        for (const entity of circlesCollision(world)) {
+            const instance = circleInstances[CircleCollision.index[entity]];
+            CircleAppearence.value[entity] = instance.data!.check ? CircleAppearenceEnum.RED : CircleAppearenceEnum.BLUE;
+        }
+
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
         context.save();
