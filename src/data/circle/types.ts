@@ -6,6 +6,5 @@ export type CreateCircleCollisionProps = {
 };
 
 export type CircleCollisionData = Data & {
-    entity: number;
     check: boolean;
 };

@@ -3,6 +3,7 @@ import { createWorld, IWorld, pipe } from 'bitecs';
 import { CircleAppearenceEnum } from '../../assets/circle/types';
 import { addCircleCollision } from '../../components/circle/collision';
 import { addFriction } from '../../components/friction';
+import { addInventory } from '../../components/inventory';
 import { Position } from '../../components/position';
 import { Radius } from '../../components/radius';
 import { addTTL } from '../../components/ttl';
@@ -14,6 +15,7 @@ import { CanvasTexture } from '../../core/texture/canvas';
 import { CircleCollisionData } from '../../data/circle/types';
 import { createCircle } from '../../entities/circle';
 import { createCollision } from '../../systems/collision';
+import { createCore } from '../../systems/core';
 import { createMovement } from '../../systems/movement';
 import { createRenderer } from '../../systems/renderer';
 import { Camera } from '../../systems/renderer/camera';
@@ -47,6 +49,7 @@ export class CircleScene implements Scene {
         });
         addVelocity(this.world, this.player, 0, 0);
         addFriction(this.world, this.player, 0.9, 0.9);
+        addInventory(this.world, this.player);
 
         this.quadtree = new Quadtree({ x: -500, y: -500, width: 1000, height: 1000, maxObjects: 10 });
         const circleInstances: Circle<CircleCollisionData>[] = [];
@@ -55,6 +58,7 @@ export class CircleScene implements Scene {
             createRenderer({ world: this.world, context: this.screen.context, camera: this.camera, circleInstances }),
         );
         this.updateSystems = pipe(
+            createCore(this.world),
             createMovement(this.world),
             createTTL(this.world),
             createCollision({ world: this.world, quadtree: this.quadtree, circleInstances }),
@@ -68,6 +72,7 @@ export class CircleScene implements Scene {
         addTTL(this.world, circle, Math.random() * 300); // 5 segundos
         addVelocity(this.world, circle, Math.random() - 0.5, Math.random() - 0.5);
         addCircleCollision(this.world, circle);
+        addInventory(this.world, circle);
     };
 
     async enter() {

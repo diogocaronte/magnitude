@@ -1,3 +1,4 @@
 export enum DataTypeEnum {
-    CIRCLE_COLLISION = 0,
+    CIRCLE_COLLISION,
+    INVENTORY,
 }
