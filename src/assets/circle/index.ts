@@ -16,3 +16,13 @@ CircleAppearences[CircleAppearenceEnum.GREEN] = {
     fillColor: '#00ff0055',
     strokeColor: '#00ff00',
 };
+
+CircleAppearences[CircleAppearenceEnum.BLACK] = {
+    fillColor: '#000',
+    strokeColor: '#000',
+};
+
+CircleAppearences[CircleAppearenceEnum.CYAN] = {
+    fillColor: '#00b5b550',
+    strokeColor: '#00b5b5b5',
+};
