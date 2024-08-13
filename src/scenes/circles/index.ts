@@ -72,7 +72,6 @@ export class CircleScene implements Scene {
         addTTL(this.world, circle, Math.random() * 300); // 5 segundos
         addVelocity(this.world, circle, Math.random() - 0.5, Math.random() - 0.5);
         addCircleCollision(this.world, circle);
-        addInventory(this.world, circle);
     };
 
     async enter() {
