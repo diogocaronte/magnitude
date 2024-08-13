@@ -12,12 +12,16 @@ export function addHealth(world: IWorld, entity: number, value: number, maximum:
 }
 
 export function heal(entity: number, amount: number) {
+    if (amount < 0) return;
+
     const available = Health.maximum[entity] - Health.value[entity];
     const add = Math.min(amount, available);
     Health.value[entity] += add;
 }
 
 export function damage(entity: number, amount: number) {
+    if (amount < 0) return;
+
     const available = Health.value[entity];
     const remove = Math.min(amount, available);
     Health.value[entity] -= remove;
