@@ -14,7 +14,6 @@ export type InventoryData = Data & {
 
 export type CreateStackDataProps = {
     item: ItemEnum;
-    amount?: number;
 };
 
 export type StackData = {

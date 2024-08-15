@@ -2,10 +2,10 @@ import { Items } from '../../assets/item';
 import { InvalidAmount } from './errors';
 import { CreateStackDataProps, StackData } from './types';
 
-export function createStackData({ item, amount = 0 }: CreateStackDataProps): StackData {
+export function createStackData({ item }: CreateStackDataProps): StackData {
     return {
         item,
-        amount,
+        amount: 0,
     };
 }
 

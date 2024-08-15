@@ -43,7 +43,7 @@ export function addInventoryItem(inventoryData: InventoryData, item: ItemEnum, a
     }
 
     while (amount > 0) {
-        const stack = createStackData({ item, amount: 0 });
+        const stack = createStackData({ item });
         const added = addInventoryStack(inventoryData, stack);
         if (!added) return amount;
 
