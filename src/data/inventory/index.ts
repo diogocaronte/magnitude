@@ -3,9 +3,11 @@ import { ItemEnum } from '../../assets/item/types';
 import { DataTypeEnum } from '../types';
 import { InvalidAmount } from './errors';
 import { addStackAmount, createStackData, removeStackAmount } from './stack';
-import { CreateInventoryDataProps, InventoryData, StackData } from './types';
+import { CreateInventoryDataProps, IInventoryData, StackData } from './types';
 
-export function createInventoryData({ entity, inventory }: CreateInventoryDataProps): InventoryData {
+export const InventoryData: IInventoryData[] = [];
+
+export function createInventoryData({ entity, inventory }: CreateInventoryDataProps): IInventoryData {
     return {
         type: DataTypeEnum.INVENTORY,
         inventory,
@@ -14,17 +16,17 @@ export function createInventoryData({ entity, inventory }: CreateInventoryDataPr
     };
 }
 
-export function getAvailableInInventory(inventoryData: InventoryData) {
+export function getAvailableInInventory(inventoryData: IInventoryData) {
     return Inventories[inventoryData.inventory].slots - inventoryData.stacks.length;
 }
 
-export function addInventoryStack(inventoryData: InventoryData, stack: StackData) {
+export function addInventoryStack(inventoryData: IInventoryData, stack: StackData) {
     if (getAvailableInInventory(inventoryData) === 0) return false;
     inventoryData.stacks.push(stack);
     return true;
 }
 
-export function removeInventoryStack(inventoryData: InventoryData, stack: StackData) {
+export function removeInventoryStack(inventoryData: IInventoryData, stack: StackData) {
     const index = inventoryData.stacks.indexOf(stack);
     if (index === -1) return false;
 
@@ -32,7 +34,7 @@ export function removeInventoryStack(inventoryData: InventoryData, stack: StackD
     return true;
 }
 
-export function addInventoryItem(inventoryData: InventoryData, item: ItemEnum, amount: number) {
+export function addInventoryItem(inventoryData: IInventoryData, item: ItemEnum, amount: number) {
     if (amount < 0) throw new InvalidAmount(amount);
 
     const stacks = inventoryData.stacks.filter((stack) => stack.item === item);
@@ -53,7 +55,7 @@ export function addInventoryItem(inventoryData: InventoryData, item: ItemEnum, a
     return 0;
 }
 
-export function removeInventoryItem(inventoryData: InventoryData, item: ItemEnum, amount: number) {
+export function removeInventoryItem(inventoryData: IInventoryData, item: ItemEnum, amount: number) {
     if (amount < 0) throw new InvalidAmount(amount);
 
     const stacks = inventoryData.stacks.filter((stack) => stack.item === item);
