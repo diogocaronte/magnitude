@@ -1,18 +1,15 @@
-import { Circle, Indexable, Quadtree } from '@timohausmann/quadtree-ts';
 import { createWorld, IWorld, pipe } from 'bitecs';
 import { CircleAppearenceEnum } from '../../assets/circle/types';
 import { addCircleCollision } from '../../components/circle/collision';
 import { addFriction } from '../../components/friction';
 import { addInventory } from '../../components/inventory';
 import { Position } from '../../components/position';
-import { Radius } from '../../components/radius';
 import { addTTL } from '../../components/ttl';
 import { addVelocity, Velocity } from '../../components/velocity';
 import { KeyboardControl } from '../../controls/keyboard';
 import { Application } from '../../core/application';
 import { Scene } from '../../core/application/types';
 import { CanvasTexture } from '../../core/texture/canvas';
-import { CircleCollisionData } from '../../data/circle/types';
 import { createCircle } from '../../entities/circle';
 import { createCollision } from '../../systems/collision';
 import { createCore } from '../../systems/core';
@@ -20,6 +17,7 @@ import { createMovement } from '../../systems/movement';
 import { createRenderer } from '../../systems/renderer';
 import { Camera } from '../../systems/renderer/camera';
 import { createTTL } from '../../systems/ttl';
+import { addPlayerTag } from '../../tags/player';
 import { CircleSceneProps } from './types';
 
 export class CircleScene implements Scene {
@@ -30,7 +28,6 @@ export class CircleScene implements Scene {
     camera: Camera;
     keyboard: KeyboardControl;
     player: number;
-    quadtree: Quadtree<Indexable & { data: CircleCollisionData }>;
 
     updateSystems: (...input: any[]) => any;
     renderSystems: (...input: any[]) => any;
@@ -44,24 +41,21 @@ export class CircleScene implements Scene {
         this.keyboard = new KeyboardControl();
 
         this.player = createCircle(this.world, {
-            radius: 10,
+            radius: 20,
             appearence: CircleAppearenceEnum.GREEN,
         });
+        addPlayerTag(this.world, this.player);
         addVelocity(this.world, this.player, 0, 0);
         addFriction(this.world, this.player, 0.9, 0.9);
+        addCircleCollision(this.world, this.player);
         addInventory(this.world, this.player);
 
-        this.quadtree = new Quadtree({ x: -500, y: -500, width: 1000, height: 1000, maxObjects: 10 });
-        const circleInstances: Circle<CircleCollisionData>[] = [];
-
-        this.renderSystems = pipe(
-            createRenderer({ world: this.world, context: this.screen.context, camera: this.camera, circleInstances }),
-        );
+        this.renderSystems = pipe(createRenderer({ world: this.world, context: this.screen.context, camera: this.camera }));
         this.updateSystems = pipe(
             createCore(this.world),
             createMovement(this.world),
             createTTL(this.world),
-            createCollision({ world: this.world, quadtree: this.quadtree, circleInstances }),
+            createCollision({ world: this.world }),
         );
     }
 
@@ -70,12 +64,12 @@ export class CircleScene implements Scene {
             appearence: Math.random() > 0.5 ? CircleAppearenceEnum.RED : CircleAppearenceEnum.BLUE, // it will be ignored
         });
         addTTL(this.world, circle, Math.random() * 300); // 5 segundos
-        addVelocity(this.world, circle, Math.random() - 0.5, Math.random() - 0.5);
+        addVelocity(this.world, circle, Math.random() * 5 - 2.5, Math.random() * 5 - 2.5);
         addCircleCollision(this.world, circle);
     };
 
     async enter() {
-        const interval = this.application.timer.interval(this.spawnRandomCircle, 0, 1000 / 30);
+        const interval = this.application.timer.interval(this.spawnRandomCircle, 0, 1000 / 60);
 
         this.keyboard.attach(document.body);
 
@@ -119,17 +113,5 @@ export class CircleScene implements Scene {
         }
 
         this.updateSystems();
-
-        const candidates = this.quadtree.retrieve(
-            new Circle({
-                x: Position.x[this.player],
-                y: Position.y[this.player],
-                r: Radius.value[this.player],
-            }),
-        );
-
-        for (const candidate of candidates) {
-            candidate.data.check = true;
-        }
     }
 }
