@@ -1,9 +1,10 @@
 export enum DataTypeEnum {
+    CIRCLE_QUADTREE,
     CIRCLE_COLLISION,
     INVENTORY,
 }
 
-export type Data = {
+export type IData = {
     type: DataTypeEnum;
     entity: number;
 };

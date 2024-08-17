@@ -1,4 +1,4 @@
-import { defineQuery } from 'bitecs';
+import { defineQuery, Not } from 'bitecs';
 import { CircleAppearences } from '../../assets/circle';
 import { CircleAppearenceEnum } from '../../assets/circle/types';
 import { PortalAppearences } from '../../assets/portal';
@@ -7,18 +7,20 @@ import { CircleCollision } from '../../components/circle/collision';
 import { PortalAppearence } from '../../components/portal/appearence';
 import { Position } from '../../components/position';
 import { Radius } from '../../components/radius';
+import { CircleCollisionData } from '../../data/circle/collision';
+import { PlayerTag } from '../../tags/player';
 import { TWO_PI } from '../../utils/math';
 import { RendererProps } from './types';
 
-export function createRenderer({ world, context, camera, circleInstances }: RendererProps) {
+export function createRenderer({ world, context, camera }: RendererProps) {
     const circles = defineQuery([Position, Radius, CircleAppearence]);
     const portals = defineQuery([Position, Radius, PortalAppearence]);
-    const circlesCollision = defineQuery([Position, Radius, CircleAppearence, CircleCollision]);
+    const circlesCollision = defineQuery([Position, Radius, CircleAppearence, CircleCollision, Not(PlayerTag)]);
 
     return () => {
         for (const entity of circlesCollision(world)) {
-            const instance = circleInstances[CircleCollision.index[entity]];
-            CircleAppearence.value[entity] = instance.data!.check ? CircleAppearenceEnum.RED : CircleAppearenceEnum.BLUE;
+            const data = CircleCollisionData[CircleCollision.index[entity]];
+            CircleAppearence.value[entity] = data.check ? CircleAppearenceEnum.RED : CircleAppearenceEnum.BLUE;
         }
 
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);

@@ -1,7 +1,9 @@
 import { DataTypeEnum } from '../types';
-import { CircleCollisionData, CreateCircleCollisionProps } from './types';
+import { CreateCircleCollisionProps, ICircleCollisionData } from './types';
 
-export function createCircleCollisionData({ entity, check = false } = {} as CreateCircleCollisionProps): CircleCollisionData {
+export const CircleCollisionData: ICircleCollisionData[] = [];
+
+export function createCircleCollisionData({ entity, check = false } = {} as CreateCircleCollisionProps): ICircleCollisionData {
     return {
         type: DataTypeEnum.CIRCLE_COLLISION,
         entity,
