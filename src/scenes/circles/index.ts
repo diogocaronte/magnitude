@@ -1,5 +1,6 @@
 import { createWorld, IWorld, pipe } from 'bitecs';
 import { CircleAppearenceEnum } from '../../assets/circle/types';
+import { PortalAppearenceEnum } from '../../assets/portal/types';
 import { addCircleCollision } from '../../components/circle/collision';
 import { addFriction } from '../../components/friction';
 import { addInventory } from '../../components/inventory';
@@ -11,9 +12,11 @@ import { Application } from '../../core/application';
 import { Scene } from '../../core/application/types';
 import { CanvasTexture } from '../../core/texture/canvas';
 import { createCircle } from '../../entities/circle';
+import { createPortal } from '../../entities/portal';
 import { createCollision } from '../../systems/collision';
 import { createCore } from '../../systems/core';
 import { createMovement } from '../../systems/movement';
+import { createPortal as createPortalSystem } from '../../systems/portal';
 import { createRenderer } from '../../systems/renderer';
 import { Camera } from '../../systems/renderer/camera';
 import { createTTL } from '../../systems/ttl';
@@ -28,6 +31,8 @@ export class CircleScene implements Scene {
     camera: Camera;
     keyboard: KeyboardControl;
     player: number;
+    portal: number;
+    portal1: number;
 
     updateSystems: (...input: any[]) => any;
     renderSystems: (...input: any[]) => any;
@@ -54,9 +59,28 @@ export class CircleScene implements Scene {
         this.updateSystems = pipe(
             createCore(this.world),
             createMovement(this.world),
+            createPortalSystem(this.world),
             createTTL(this.world),
             createCollision({ world: this.world }),
         );
+
+        this.portal = createPortal(this.world, {
+            x: 400,
+            y: 0,
+            px: -400,
+            py: 0,
+            radius: 20,
+            appearence: PortalAppearenceEnum.CYAN,
+        });
+
+        this.portal1 = createPortal(this.world, {
+            x: -400,
+            y: 0,
+            px: 400,
+            py: 0,
+            radius: 20,
+            appearence: PortalAppearenceEnum.CYAN,
+        });
     }
 
     spawnRandomCircle = () => {

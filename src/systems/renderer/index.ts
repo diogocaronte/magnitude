@@ -1,8 +1,10 @@
 import { defineQuery, Not } from 'bitecs';
 import { CircleAppearences } from '../../assets/circle';
 import { CircleAppearenceEnum } from '../../assets/circle/types';
+import { PortalAppearences } from '../../assets/portal';
 import { CircleAppearence } from '../../components/circle/appearence';
 import { CircleCollision } from '../../components/circle/collision';
+import { PortalAppearence } from '../../components/portal/appearence';
 import { Position } from '../../components/position';
 import { Radius } from '../../components/radius';
 import { CircleCollisionData } from '../../data/circle/collision';
@@ -12,6 +14,7 @@ import { RendererProps } from './types';
 
 export function createRenderer({ world, context, camera }: RendererProps) {
     const circles = defineQuery([Position, Radius, CircleAppearence]);
+    const portals = defineQuery([Position, Radius, PortalAppearence]);
     const circlesCollision = defineQuery([Position, Radius, CircleAppearence, CircleCollision, Not(PlayerTag)]);
 
     return () => {
@@ -32,6 +35,18 @@ export function createRenderer({ world, context, camera }: RendererProps) {
 
         for (let entity of circles(world)) {
             const appearence = CircleAppearences[CircleAppearence.value[entity]];
+
+            context.fillStyle = appearence.fillColor;
+            context.strokeStyle = appearence.strokeColor;
+
+            context.beginPath();
+            context.arc(Position.x[entity], Position.y[entity], Radius.value[entity], 0, TWO_PI);
+            context.fill();
+            context.stroke();
+        }
+
+        for (let entity of portals(world)) {
+            const appearence = PortalAppearences[PortalAppearence.value[entity]];
 
             context.fillStyle = appearence.fillColor;
             context.strokeStyle = appearence.strokeColor;
