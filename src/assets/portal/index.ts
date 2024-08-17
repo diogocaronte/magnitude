@@ -1,4 +1,4 @@
-import { PortalAppearenceEnum, IPortalAppearence } from './types';
+import { IPortalAppearence, PortalAppearenceEnum } from './types';
 
 export const PortalAppearences: IPortalAppearence[] = [];
 
