@@ -19,6 +19,8 @@ import { createRenderer } from '../../systems/renderer';
 import { Camera } from '../../systems/renderer/camera';
 import { createTTL } from '../../systems/ttl';
 import { CircleSceneProps } from './types';
+import { addPortal } from '../../components/portal';
+import { createPortal } from '../../systems/portal';
 
 export class CircleScene implements Scene {
     application: Application;
@@ -28,6 +30,8 @@ export class CircleScene implements Scene {
     camera: Camera;
     keyboard: KeyboardControl;
     player: number;
+    portal: number;
+    portal1: number;
     quadtree: Quadtree<Indexable & { data: CircleCollisionData }>;
 
     updateSystems: (...input: any[]) => any;
@@ -45,6 +49,8 @@ export class CircleScene implements Scene {
             radius: 10,
             appearence: CircleAppearenceEnum.GREEN,
         });
+       
+        
         addVelocity(this.world, this.player, 0, 0);
         addFriction(this.world, this.player, 0.9, 0.9);
 
@@ -56,9 +62,26 @@ export class CircleScene implements Scene {
         );
         this.updateSystems = pipe(
             createMovement(this.world),
+            createPortal(this.world),
             createTTL(this.world),
             createCollision({ world: this.world, quadtree: this.quadtree, circleInstances }),
         );
+
+        this.portal = createCircle(this.world, {
+            x: 400,
+            y: 0,
+            radius: 20,
+            appearence: CircleAppearenceEnum.BLUE,
+        });
+        addPortal(this.world, this.portal, -200, 0)
+
+        this.portal1 = createCircle(this.world, {
+            x: -600,
+            y: 0,
+            radius: 20,
+            appearence: CircleAppearenceEnum.BLUE,
+        });
+        addPortal(this.world, this.portal1, 200, 0)
     }
 
     spawnRandomCircle = () => {
