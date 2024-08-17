@@ -50,7 +50,6 @@ export class CircleScene implements Scene {
             appearence: CircleAppearenceEnum.GREEN,
         });
         addPlayerTag(this.world, this.player);
-
         addVelocity(this.world, this.player, 0, 0);
         addFriction(this.world, this.player, 0.9, 0.9);
         addCircleCollision(this.world, this.player);
