@@ -1,7 +1,7 @@
+import { InventoryEnum } from '@/assets/inventory/types';
+import { Inventory } from '@/components/inventory';
+import { createInventoryData, InventoryData } from '@/data/inventory';
 import { defineQuery, IWorld } from 'bitecs';
-import { InventoryEnum } from '../../assets/inventory/types';
-import { Inventory } from '../../components/inventory';
-import { createInventoryData, InventoryData } from '../../data/inventory';
 import { createInitializeData } from './utils';
 
 export function createCore(world: IWorld) {

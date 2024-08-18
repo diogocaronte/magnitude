@@ -1,6 +1,6 @@
+import { Position } from '@/components/position';
+import { Radius } from '@/components/radius';
 import { Circle } from '@timohausmann/quadtree-ts';
-import { Position } from '../../components/position';
-import { Radius } from '../../components/radius';
 import { DataTypeEnum } from '../types';
 import { CreateCircleQuadtreeProps, ICircleQuadtreeData } from './types';
 

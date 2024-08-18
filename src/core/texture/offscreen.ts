@@ -1,4 +1,4 @@
-import { Texture } from '../texture';
+import { Texture } from '.';
 
 export class OffscreenTexture extends Texture {
     declare texture: OffscreenCanvas;

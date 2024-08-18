@@ -1,7 +1,7 @@
+import { Friction } from '@/components/friction';
+import { Position } from '@/components/position';
+import { Velocity } from '@/components/velocity';
 import { defineQuery, IWorld } from 'bitecs';
-import { Friction } from '../components/friction';
-import { Position } from '../components/position';
-import { Velocity } from '../components/velocity';
 
 export function createMovement(world: IWorld) {
     const movable = defineQuery([Position, Velocity]);

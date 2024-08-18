@@ -7,7 +7,7 @@ export class Application {
     _scenes = new Set<Scene>();
     _cleanups = new Map<Scene, () => Promise<void> | void>();
 
-    constructor({ autoStart = true, frameRate = 1000 / 60 } = {} as Partial<ApplicationProps>) {
+    constructor({ autoStart = true, frameRate = 1000 / 60 } = {} as ApplicationProps) {
         this.timer = new Timer();
 
         this.timer.animation(this.render, 0);

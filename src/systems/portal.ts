@@ -1,7 +1,7 @@
+import { Portal } from '@/components/portal';
+import { Position } from '@/components/position';
+import { Radius } from '@/components/radius';
 import { defineQuery, IWorld } from 'bitecs';
-import { Portal } from '../components/portal';
-import { Position } from '../components/position';
-import { Radius } from '../components/radius';
 
 export function createPortal(world: IWorld) {
     const portals = defineQuery([Portal, Position, Radius]);

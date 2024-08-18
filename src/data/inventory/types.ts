@@ -1,5 +1,5 @@
-import { InventoryEnum } from '../../assets/inventory/types';
-import { ItemEnum } from '../../assets/item/types';
+import { InventoryEnum } from '@/assets/inventory/types';
+import { ItemEnum } from '@/assets/item/types';
 import { IData } from '../types';
 
 export type CreateInventoryDataProps = {

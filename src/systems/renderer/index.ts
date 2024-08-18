@@ -1,15 +1,15 @@
+import { CircleAppearences } from '@/assets/circle';
+import { CircleAppearenceEnum } from '@/assets/circle/types';
+import { PortalAppearences } from '@/assets/portal';
+import { CircleAppearence } from '@/components/circle/appearence';
+import { CircleCollision } from '@/components/circle/collision';
+import { PortalAppearence } from '@/components/portal/appearence';
+import { Position } from '@/components/position';
+import { Radius } from '@/components/radius';
+import { CircleCollisionData } from '@/data/circle/collision';
+import { PlayerTag } from '@/tags/player';
+import { TWO_PI } from '@/utils/math';
 import { defineQuery, Not } from 'bitecs';
-import { CircleAppearences } from '../../assets/circle';
-import { CircleAppearenceEnum } from '../../assets/circle/types';
-import { PortalAppearences } from '../../assets/portal';
-import { CircleAppearence } from '../../components/circle/appearence';
-import { CircleCollision } from '../../components/circle/collision';
-import { PortalAppearence } from '../../components/portal/appearence';
-import { Position } from '../../components/position';
-import { Radius } from '../../components/radius';
-import { CircleCollisionData } from '../../data/circle/collision';
-import { PlayerTag } from '../../tags/player';
-import { TWO_PI } from '../../utils/math';
 import { RendererProps } from './types';
 
 export function createRenderer({ world, context, camera }: RendererProps) {

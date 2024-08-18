@@ -1,5 +1,5 @@
-import { Inventories } from '../../assets/inventory';
-import { ItemEnum } from '../../assets/item/types';
+import { Inventories } from '@/assets/inventory';
+import { ItemEnum } from '@/assets/item/types';
 import { DataTypeEnum } from '../types';
 import { InvalidAmount } from './errors';
 import { addStackAmount, createStackData, removeStackAmount } from './stack';

@@ -1,5 +1,5 @@
+import { CircleAppearenceEnum } from '@/assets/circle/types';
 import { addComponent, defineComponent, IWorld, Types } from 'bitecs';
-import { CircleAppearenceEnum } from '../../assets/circle/types';
 
 export const CircleAppearence = defineComponent({
     value: Types.ui8,

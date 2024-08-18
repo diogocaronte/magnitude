@@ -1,10 +1,6 @@
-import Timer from '../timer';
-
 export type ApplicationProps = {
-    autoStart: boolean;
-    frameRate: number;
-    autoResize: boolean;
-    timer: Timer;
+    frameRate?: number;
+    autoStart?: boolean;
 };
 
 export interface Scene {

@@ -1,9 +1,9 @@
+import { PortalAppearenceEnum } from '@/assets/portal/types';
+import { addPortal } from '@/components/portal';
+import { addPortalAppearence } from '@/components/portal/appearence';
+import { addPosition } from '@/components/position';
+import { addRadius } from '@/components/radius';
 import { addEntity, IWorld } from 'bitecs';
-import { PortalAppearenceEnum } from '../../assets/portal/types';
-import { addPortal } from '../../components/portal';
-import { addPortalAppearence } from '../../components/portal/appearence';
-import { addPosition } from '../../components/position';
-import { addRadius } from '../../components/radius';
 import { PortalProps } from './types';
 
 export function createPortal(
