@@ -1,4 +1,6 @@
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { resolve } from 'path';
+
 const dev = (process.env.NODE_ENV || 'development') === 'development';
 
 /** @type {import('vite').UserConfig} */
@@ -9,4 +11,5 @@ export default {
             '@': resolve(__dirname, './src'),
         },
     },
+    plugins: [svelte()],
 };
