@@ -41,6 +41,9 @@ export class CircleScene implements Scene {
         this.application = props.application;
         this.screen = new CanvasTexture();
 
+        const $app = document.querySelector('#app')!;
+        $app.append(this.screen.texture);
+
         this.world = createWorld();
         this.camera = new Camera();
         this.keyboard = new KeyboardControl();
