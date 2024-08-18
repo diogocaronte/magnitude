@@ -1,6 +1,7 @@
 import { CircleAppearences } from '@/assets/circle';
 import { CircleAppearenceEnum } from '@/assets/circle/types';
 import { PortalAppearences } from '@/assets/portal';
+import { Chunk } from '@/components/chunk';
 import { CircleAppearence } from '@/components/circle/appearence';
 import { CircleCollision } from '@/components/circle/collision';
 import { PortalAppearence } from '@/components/portal/appearence';
@@ -10,12 +11,14 @@ import { CircleCollisionData } from '@/data/circle/collision';
 import { PlayerTag } from '@/tags/player';
 import { TWO_PI } from '@/utils/math';
 import { defineQuery, Not } from 'bitecs';
+import { chunkSize } from '../chunk';
 import { RendererProps } from './types';
 
 export function createRenderer({ world, context, camera }: RendererProps) {
     const circles = defineQuery([Position, Radius, CircleAppearence]);
     const portals = defineQuery([Position, Radius, PortalAppearence]);
     const circlesCollision = defineQuery([Position, Radius, CircleAppearence, CircleCollision, Not(PlayerTag)]);
+    const chunks = defineQuery([Position, Chunk]);
 
     return () => {
         for (const entity of circlesCollision(world)) {
@@ -55,6 +58,12 @@ export function createRenderer({ world, context, camera }: RendererProps) {
             context.arc(Position.x[entity], Position.y[entity], Radius.value[entity], 0, TWO_PI);
             context.fill();
             context.stroke();
+        }
+
+        for (const chunk of chunks(world)) {
+            context.strokeStyle = '#FFF';
+
+            context.strokeRect(Position.x[chunk], Position.y[chunk], chunkSize, chunkSize);
         }
 
         context.restore();

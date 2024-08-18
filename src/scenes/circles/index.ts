@@ -12,6 +12,7 @@ import { Scene } from '@/core/application/types';
 import { CanvasTexture } from '@/core/texture/canvas';
 import { createCircle } from '@/entities/circle';
 import { createPortal } from '@/entities/portal';
+import { createChunkSystem } from '@/systems/chunk';
 import { createCollision } from '@/systems/collision';
 import { createCore } from '@/systems/core';
 import { createMovement } from '@/systems/movement';
@@ -19,6 +20,7 @@ import { createPortal as createPortalSystem } from '@/systems/portal';
 import { createRenderer } from '@/systems/renderer';
 import { Camera } from '@/systems/renderer/camera';
 import { createTTL } from '@/systems/ttl';
+import { addGeneratesChunkTag } from '@/tags/generates-chunk';
 import { addPlayerTag } from '@/tags/player';
 import { createWorld, IWorld, pipe } from 'bitecs';
 import { CircleSceneProps } from './types';
@@ -54,6 +56,7 @@ export class CircleScene implements Scene {
         addFriction(this.world, this.player, 0.9, 0.9);
         addCircleCollision(this.world, this.player);
         addInventory(this.world, this.player);
+        addGeneratesChunkTag(this.world, this.player);
 
         this.renderSystems = pipe(createRenderer({ world: this.world, context: this.screen.context, camera: this.camera }));
         this.updateSystems = pipe(
@@ -62,6 +65,7 @@ export class CircleScene implements Scene {
             createPortalSystem(this.world),
             createTTL(this.world),
             createCollision({ world: this.world }),
+            createChunkSystem(this.world),
         );
 
         this.portal = createPortal(this.world, {
