@@ -1,11 +1,13 @@
 import { CircleAppearences } from '@/assets/circle';
 import { CircleAppearenceEnum } from '@/assets/circle/types';
 import { PortalAppearences } from '@/assets/portal';
+import { Sprites } from '@/assets/sprite';
 import { CircleAppearence } from '@/components/circle/appearence';
 import { CircleCollision } from '@/components/circle/collision';
 import { PortalAppearence } from '@/components/portal/appearence';
 import { Position } from '@/components/position';
 import { Radius } from '@/components/radius';
+import { Sprite } from '@/components/sprite';
 import { CircleCollisionData } from '@/data/circle/collision';
 import { PlayerTag } from '@/tags/player';
 import { TWO_PI } from '@/utils/math';
@@ -16,6 +18,7 @@ export function createRenderer({ world, context, camera }: RendererProps) {
     const circles = defineQuery([Position, Radius, CircleAppearence]);
     const portals = defineQuery([Position, Radius, PortalAppearence]);
     const circlesCollision = defineQuery([Position, Radius, CircleAppearence, CircleCollision, Not(PlayerTag)]);
+    const sprites = defineQuery([Position, Sprite]);
 
     return () => {
         for (const entity of circlesCollision(world)) {
@@ -55,6 +58,22 @@ export function createRenderer({ world, context, camera }: RendererProps) {
             context.arc(Position.x[entity], Position.y[entity], Radius.value[entity], 0, TWO_PI);
             context.fill();
             context.stroke();
+        }
+
+        for (const sprite of sprites(world)) {
+            const spriteAsset = Sprites[Sprite.index[sprite]];
+
+            context.drawImage(
+                spriteAsset.image,
+                spriteAsset.sourceX,
+                spriteAsset.sourceY,
+                spriteAsset.sourceW,
+                spriteAsset.sourceH,
+                Position.x[sprite] + Sprite.offsetX[sprite],
+                Position.y[sprite] + Sprite.offsetY[sprite],
+                Sprite.destinationW[sprite],
+                Sprite.destinationH[sprite],
+            );
         }
 
         context.restore();
