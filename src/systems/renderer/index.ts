@@ -15,12 +15,15 @@ import { EnemyAppearence } from '../../components/enemy/appearence';
 import { EnemyAppearences } from '../../assets/enemy';
 import { AsteroidAppearences } from '../../assets/asteroid';
 import { AsteroidAppearence } from '../../components/asteroid/appearence';
+import { PlanetAppearence } from '../../components/planet/appearence';
+import { PlanetAppearences } from '../../assets/planet';
 
 export function createRenderer({ world, context, camera }: RendererProps) {
     const circles = defineQuery([Position, Radius, CircleAppearence]);
     const portals = defineQuery([Position, Radius, PortalAppearence]);
     const enemies = defineQuery([Position, Radius, EnemyAppearence]);
     const asteroids = defineQuery([Position, Radius, AsteroidAppearence]);
+    const planets = defineQuery([Position, Radius, PlanetAppearence]);
     const circlesCollision = defineQuery([Position, Radius, CircleAppearence, CircleCollision, Not(PlayerTag)]);
 
     return () => {
@@ -77,6 +80,18 @@ export function createRenderer({ world, context, camera }: RendererProps) {
 
         for (let entity of asteroids(world)) {
             const appearence = AsteroidAppearences[AsteroidAppearence.value[entity]];
+
+            context.fillStyle = appearence.fillColor;
+            context.strokeStyle = appearence.strokeColor;
+
+            context.beginPath();
+            context.arc(Position.x[entity], Position.y[entity], Radius.value[entity], 0, TWO_PI);
+            context.fill();
+            context.stroke();
+        }
+
+        for (let entity of planets(world)) {
+            const appearence = PlanetAppearences[PlanetAppearence.value[entity]];
 
             context.fillStyle = appearence.fillColor;
             context.strokeStyle = appearence.strokeColor;
