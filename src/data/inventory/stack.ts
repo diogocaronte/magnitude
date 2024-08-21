@@ -1,4 +1,4 @@
-import { Items } from '../../assets/item';
+import { Items } from '@/assets/item';
 import { InvalidAmount } from './errors';
 import { CreateStackDataProps, StackData } from './types';
 

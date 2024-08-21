@@ -8,7 +8,7 @@ export type RendererProps = {
 };
 
 export type CameraProps = {
-    x: number;
-    y: number;
-    scale: number;
+    x?: number;
+    y?: number;
+    scale?: number;
 };

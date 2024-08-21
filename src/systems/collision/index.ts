@@ -1,12 +1,12 @@
+import { CircleCollision } from '@/components/circle/collision';
+import { Position } from '@/components/position';
+import { Radius } from '@/components/radius';
+import { CircleCollisionData, createCircleCollisionData } from '@/data/circle/collision';
+import { CircleQuadtreeData, createCircleQuadtreeData } from '@/data/circle/quadtree';
+import { IData } from '@/data/types';
+import { PlayerTag } from '@/tags/player';
 import { Circle, Indexable, Quadtree } from '@timohausmann/quadtree-ts';
 import { defineQuery } from 'bitecs';
-import { CircleCollision } from '../../components/circle/collision';
-import { Position } from '../../components/position';
-import { Radius } from '../../components/radius';
-import { CircleCollisionData, createCircleCollisionData } from '../../data/circle/collision';
-import { CircleQuadtreeData, createCircleQuadtreeData } from '../../data/circle/quadtree';
-import { IData } from '../../data/types';
-import { PlayerTag } from '../../tags/player';
 import { createInitializeData } from '../core/utils';
 import { CreateCollisionProps } from './types';
 

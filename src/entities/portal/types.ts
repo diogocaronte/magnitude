@@ -1,4 +1,4 @@
-import { PortalAppearenceEnum } from '../../assets/portal/types';
+import { PortalAppearenceEnum } from '@/assets/portal/types';
 
 export type PortalProps = {
     x?: number;

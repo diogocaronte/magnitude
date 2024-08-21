@@ -1,6 +1,6 @@
+import { Pool } from '@/utils/pool';
+import { ConstructorOf } from '@/utils/types';
 import FlatQueue from 'flatqueue';
-import { Pool } from '../../utils/pool';
-import { ConstructorOf } from '../../utils/types';
 import { AnimationCallback } from './animation';
 import { DelayCallback } from './delay';
 import { IntervalCallback } from './interval';

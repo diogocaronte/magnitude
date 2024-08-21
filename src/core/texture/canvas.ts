@@ -1,4 +1,4 @@
-import { Texture } from '../texture';
+import { Texture } from '.';
 
 export class CanvasTexture extends Texture {
     declare texture: HTMLCanvasElement;

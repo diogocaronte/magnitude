@@ -5,7 +5,7 @@ export class Camera {
     y: number;
     scale: number;
 
-    constructor({ x = 0, y = x, scale = 1 } = {} as Partial<CameraProps>) {
+    constructor({ x = 0, y = x, scale = 1 } = {} as CameraProps) {
         this.x = x;
         this.y = y;
         this.scale = scale;

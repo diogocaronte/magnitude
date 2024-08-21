@@ -1,4 +1,4 @@
-import { Application } from '../../core/application';
+import { Application } from '@/core/application';
 
 export type CircleSceneProps = {
     application: Application;
