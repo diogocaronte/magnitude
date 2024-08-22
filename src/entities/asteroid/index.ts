@@ -1,6 +1,5 @@
 import { addEntity, IWorld } from 'bitecs';
 import { AsteroidAppearenceEnum } from '../../assets/asteroid/types';
-import { addAsteroid } from '../../components/asteroid';
 import { addAsteroidAppearence } from '../../components/asteroid/appearence';
 import { addPosition } from '../../components/position';
 import { addRadius } from '../../components/radius';
@@ -16,7 +15,6 @@ export function createAsteroid(
     addPosition(world, entity, x, y);
     addRadius(world, entity, radius);
     addAsteroidAppearence(world, entity, appearence);
-    addAsteroid(world, entity, x, y);
     addHealth(world, entity, value, maximum)
     
     return entity;

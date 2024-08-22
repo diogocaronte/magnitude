@@ -1,6 +1,5 @@
 import { addEntity, IWorld } from 'bitecs';
 import { EnemyAppearenceEnum } from '../../assets/enemy/types';
-import { addEnemy } from '../../components/enemy';
 import { addEnemyAppearence } from '../../components/enemy/appearence';
 import { addPosition } from '../../components/position';
 import { addRadius } from '../../components/radius';
@@ -16,7 +15,6 @@ export function createEnemy(
     addPosition(world, entity, x, y);
     addRadius(world, entity, radius);
     addEnemyAppearence(world, entity, appearence);
-    addEnemy(world, entity, x, y);
     addHealth(world, entity, value, maximum)
     
     return entity;

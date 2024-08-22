@@ -1,6 +1,5 @@
 import { addEntity, IWorld } from 'bitecs';
 import { PlanetAppearenceEnum } from '../../assets/planet/types';
-import { addPlanet } from '../../components/planet';
 import { addPlanetAppearence } from '../../components/planet/appearence';
 import { addPosition } from '../../components/position';
 import { addRadius } from '../../components/radius';
@@ -15,7 +14,6 @@ export function createPlanet(
     addPosition(world, entity, x, y);
     addRadius(world, entity, radius);
     addPlanetAppearence(world, entity, appearence);
-    addPlanet(world, entity, x, y);
     
     return entity;
 }
