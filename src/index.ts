@@ -1,10 +1,10 @@
 import { Application } from './core/application';
 import './index.css';
-import { CircleScene } from './scenes/circles';
+import { SpriteScene } from './scenes/sprites';
 
 async function init() {
     const application = new Application();
-    const scene = new CircleScene({ application });
+    const scene = new SpriteScene({ application });
 
     if (await application.enterScene(scene)) {
         const $app = document.querySelector('#app')!;
