@@ -1,5 +1,5 @@
+import { PlanetAppearenceEnum } from '@/assets/planet/types';
 import { addComponent, defineComponent, IWorld, Types } from 'bitecs';
-import { PlanetAppearenceEnum } from '../../assets/planet/types';
 
 export const PlanetAppearence = defineComponent({
     value: Types.ui8,

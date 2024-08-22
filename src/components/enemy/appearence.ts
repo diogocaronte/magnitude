@@ -1,5 +1,5 @@
+import { EnemyAppearenceEnum } from '@/assets/enemy/types';
 import { addComponent, defineComponent, IWorld, Types } from 'bitecs';
-import { EnemyAppearenceEnum } from '../../assets/enemy/types';
 
 export const EnemyAppearence = defineComponent({
     value: Types.ui8,

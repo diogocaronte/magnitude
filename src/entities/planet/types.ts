@@ -1,4 +1,4 @@
-import { PlanetAppearenceEnum } from '../../assets/planet/types';
+import { PlanetAppearenceEnum } from '@/assets/planet/types';
 
 export type PlanetProps = {
     x?: number;

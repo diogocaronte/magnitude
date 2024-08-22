@@ -1,5 +1,5 @@
+import { AsteroidAppearenceEnum } from '@/assets/asteroid/types';
 import { addComponent, defineComponent, IWorld, Types } from 'bitecs';
-import { AsteroidAppearenceEnum } from '../../assets/asteroid/types';
 
 export const AsteroidAppearence = defineComponent({
     value: Types.ui8,

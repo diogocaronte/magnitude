@@ -1,4 +1,4 @@
-import { AsteroidAppearenceEnum } from '../../assets/asteroid/types';
+import { AsteroidAppearenceEnum } from '@/assets/asteroid/types';
 
 export type AsteroidProps = {
     x?: number;
