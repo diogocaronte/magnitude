@@ -13,10 +13,14 @@ import { PlayerTag } from '@/tags/player';
 import { TWO_PI } from '@/utils/math';
 import { defineQuery, Not } from 'bitecs';
 import { RendererProps } from './types';
+import { RectangleAppearence } from '@/components/rectangle/appearence';
+import { RectangleAppearences } from '@/assets/rectangle';
+import { Rectangle } from '@/components/rectangle';
 
 export function createRenderer({ world, context, camera }: RendererProps) {
     const circles = defineQuery([Position, Radius, CircleAppearence]);
     const portals = defineQuery([Position, Radius, PortalAppearence]);
+    const rectangles = defineQuery([Position, RectangleAppearence]);
     const circlesCollision = defineQuery([Position, Radius, CircleAppearence, CircleCollision, Not(PlayerTag)]);
     const sprites = defineQuery([Position, Sprite]);
 
@@ -57,6 +61,17 @@ export function createRenderer({ world, context, camera }: RendererProps) {
             context.beginPath();
             context.arc(Position.x[entity], Position.y[entity], Radius.value[entity], 0, TWO_PI);
             context.fill();
+            context.stroke();
+        }
+
+        for (let entity of rectangles(world)) {
+            const appearence = RectangleAppearences[RectangleAppearence.value[entity]];
+
+            context.fillStyle = appearence.fillColor;
+            context.strokeStyle = appearence.strokeColor;
+
+            context.fillRect(Position.x[entity], Position.y[entity], Rectangle.width[entity], Rectangle.height[entity]);
+            context.strokeRect(Position.x[entity], Position.y[entity], Rectangle.width[entity], Rectangle.height[entity]);
             context.stroke();
         }
 
