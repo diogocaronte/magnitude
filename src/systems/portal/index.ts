@@ -1,15 +1,18 @@
 import { Portal } from '@/components/portal';
 import { Position } from '@/components/position';
 import { Radius } from '@/components/radius';
-import { defineQuery, IWorld } from 'bitecs';
+import { defineQuery } from 'bitecs';
+import { CreatePortalProps } from './types';
 
-export function createPortal(world: IWorld) {
+export function createPortal({ world }: CreatePortalProps) {
     const portals = defineQuery([Portal, Position, Radius]);
     const entities = defineQuery([Position]);
 
     return () => {
-        const _entities = entities(world);
-        for (const portal of portals(world)) {
+        const { bitworld } = world;
+        const _entities = entities(bitworld);
+
+        for (const portal of portals(bitworld)) {
             for (const entity of _entities) {
                 if (portal === entity) continue;
 
