@@ -12,16 +12,19 @@ import { CircleCollisionData } from '@/data/circle/collision';
 import { PlayerTag } from '@/tags/player';
 import { TWO_PI } from '@/utils/math';
 import { defineQuery, Not } from 'bitecs';
-import { RendererProps } from './types';
+import { CreateRendererProps } from './types';
 
-export function createRenderer({ world, context, camera }: RendererProps) {
+export function createRenderer({ world }: CreateRendererProps) {
     const circles = defineQuery([Position, Radius, CircleAppearence]);
     const portals = defineQuery([Position, Radius, PortalAppearence]);
     const circlesCollision = defineQuery([Position, Radius, CircleAppearence, CircleCollision, Not(PlayerTag)]);
     const sprites = defineQuery([Position, Sprite]);
 
     return () => {
-        for (const entity of circlesCollision(world)) {
+        const { screen, viewport, bitworld } = world;
+        const { context } = screen;
+
+        for (const entity of circlesCollision(bitworld)) {
             const data = CircleCollisionData[CircleCollision.index[entity]];
             CircleAppearence.value[entity] = data.check ? CircleAppearenceEnum.RED : CircleAppearenceEnum.BLUE;
         }
@@ -33,10 +36,10 @@ export function createRenderer({ world, context, camera }: RendererProps) {
         const { width, height } = context.canvas;
 
         context.translate(width / 2, height / 2);
-        context.scale(camera.scale, camera.scale);
-        context.translate(-camera.x, -camera.y);
+        context.scale(viewport.scale, viewport.scale);
+        context.translate(-viewport.x, -viewport.y);
 
-        for (let entity of circles(world)) {
+        for (let entity of circles(bitworld)) {
             const appearence = CircleAppearences[CircleAppearence.value[entity]];
 
             context.fillStyle = appearence.fillColor;
@@ -48,7 +51,7 @@ export function createRenderer({ world, context, camera }: RendererProps) {
             context.stroke();
         }
 
-        for (let entity of portals(world)) {
+        for (let entity of portals(bitworld)) {
             const appearence = PortalAppearences[PortalAppearence.value[entity]];
 
             context.fillStyle = appearence.fillColor;
@@ -60,7 +63,7 @@ export function createRenderer({ world, context, camera }: RendererProps) {
             context.stroke();
         }
 
-        for (const sprite of sprites(world)) {
+        for (const sprite of sprites(bitworld)) {
             const spriteAsset = Sprites[Sprite.index[sprite]];
 
             context.drawImage(

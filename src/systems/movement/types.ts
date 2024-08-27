@@ -1,5 +1,5 @@
 import { World } from '@/core/world';
 
-export type CreateCollisionProps = {
+export type CreateMovementProps = {
     world: World;
 };

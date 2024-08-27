@@ -6,30 +6,27 @@ import { addInventory } from '@/components/inventory';
 import { Position } from '@/components/position';
 import { addTTL } from '@/components/ttl';
 import { addVelocity, Velocity } from '@/components/velocity';
-import { KeyboardControl } from '@/controls/keyboard';
 import { Application } from '@/core/application';
 import { Scene } from '@/core/application/types';
-import { CanvasTexture } from '@/core/texture/canvas';
+import { World } from '@/core/world';
 import { createCircle } from '@/entities/circle';
 import { createPortal } from '@/entities/portal';
 import { createCollision } from '@/systems/collision';
 import { createCore } from '@/systems/core';
+import { createCoreRenderSystem } from '@/systems/core/render';
 import { createMovement } from '@/systems/movement';
 import { createPortal as createPortalSystem } from '@/systems/portal';
 import { createRenderer } from '@/systems/renderer';
-import { Camera } from '@/systems/renderer/camera';
 import { createTTL } from '@/systems/ttl';
 import { addPlayerTag } from '@/tags/player';
-import { createWorld, IWorld, pipe } from 'bitecs';
+import { pipe } from 'bitecs';
 import { CircleSceneProps } from './types';
 
 export class CircleScene implements Scene {
     application: Application;
-    screen: CanvasTexture;
+    $container: HTMLElement;
 
-    world: IWorld;
-    camera: Camera;
-    keyboard: KeyboardControl;
+    world: World;
     player: number;
     portal: number;
     portal1: number;
@@ -39,32 +36,29 @@ export class CircleScene implements Scene {
 
     constructor(props: CircleSceneProps) {
         this.application = props.application;
-        this.screen = new CanvasTexture();
+        this.$container = props.$container;
+        this.world = new World();
 
-        this.world = createWorld();
-        this.camera = new Camera();
-        this.keyboard = new KeyboardControl();
-
-        this.player = createCircle(this.world, {
+        this.player = createCircle(this.world.bitworld, {
             radius: 20,
             appearence: CircleAppearenceEnum.GREEN,
         });
-        addPlayerTag(this.world, this.player);
-        addVelocity(this.world, this.player, 0, 0);
-        addFriction(this.world, this.player, 0.9, 0.9);
-        addCircleCollision(this.world, this.player);
-        addInventory(this.world, this.player);
+        addPlayerTag(this.world.bitworld, this.player);
+        addVelocity(this.world.bitworld, this.player, 0, 0);
+        addFriction(this.world.bitworld, this.player, 0.9, 0.9);
+        addCircleCollision(this.world.bitworld, this.player);
+        addInventory(this.world.bitworld, this.player);
 
-        this.renderSystems = pipe(createRenderer({ world: this.world, context: this.screen.context, camera: this.camera }));
+        this.renderSystems = pipe(createCoreRenderSystem({ world: this.world }), createRenderer({ world: this.world }));
         this.updateSystems = pipe(
-            createCore(this.world),
-            createMovement(this.world),
-            createPortalSystem(this.world),
-            createTTL(this.world),
+            createCore({ world: this.world }),
+            createMovement({ world: this.world }),
+            createPortalSystem({ world: this.world }),
+            createTTL({ world: this.world }),
             createCollision({ world: this.world }),
         );
 
-        this.portal = createPortal(this.world, {
+        this.portal = createPortal(this.world.bitworld, {
             x: 400,
             y: 0,
             px: -400,
@@ -73,7 +67,7 @@ export class CircleScene implements Scene {
             appearence: PortalAppearenceEnum.CYAN,
         });
 
-        this.portal1 = createPortal(this.world, {
+        this.portal1 = createPortal(this.world.bitworld, {
             x: -400,
             y: 0,
             px: 400,
@@ -84,18 +78,18 @@ export class CircleScene implements Scene {
     }
 
     spawnRandomCircle = () => {
-        const circle = createCircle(this.world, {
+        const circle = createCircle(this.world.bitworld, {
             appearence: Math.random() > 0.5 ? CircleAppearenceEnum.RED : CircleAppearenceEnum.BLUE, // it will be ignored
         });
-        addTTL(this.world, circle, Math.random() * 300); // 5 segundos
-        addVelocity(this.world, circle, Math.random() * 5 - 2.5, Math.random() * 5 - 2.5);
-        addCircleCollision(this.world, circle);
+        addTTL(this.world.bitworld, circle, Math.random() * 300); // 5 segundos
+        addVelocity(this.world.bitworld, circle, Math.random() * 5 - 2.5, Math.random() * 5 - 2.5);
+        addCircleCollision(this.world.bitworld, circle);
     };
 
     async enter() {
-        const interval = this.application.timer.interval(this.spawnRandomCircle, 0, 1000 / 60);
+        this.world.attach(this.$container);
 
-        this.keyboard.attach(document.body);
+        const interval = this.application.timer.interval(this.spawnRandomCircle, 0, 1000 / 60);
 
         return () => {
             interval.cancel();
@@ -103,38 +97,24 @@ export class CircleScene implements Scene {
     }
 
     async leave() {
-        this.keyboard.detach(document.body);
+        this.world.detach(this.$container);
     }
 
     render() {
-        const isClient = this.screen.isClientSize();
-        if (!isClient) this.screen.toClientSize();
+        const diff_x = Position.x[this.player] - this.world.camera.x;
+        const diff_y = Position.y[this.player] - this.world.camera.y;
 
-        const diff_x = Position.x[this.player] - this.camera.x;
-        const diff_y = Position.y[this.player] - this.camera.y;
-
-        this.camera.x += diff_x * 0.1;
-        this.camera.y += diff_y * 0.1;
+        this.world.camera.x += diff_x * 0.1;
+        this.world.camera.y += diff_y * 0.1;
 
         this.renderSystems();
     }
 
     update() {
-        if (this.keyboard.getState('ArrowRight') || this.keyboard.getState('KeyD')) {
-            Velocity.x[this.player] += 1;
-        }
-
-        if (this.keyboard.getState('ArrowLeft') || this.keyboard.getState('KeyA')) {
-            Velocity.x[this.player] -= 1;
-        }
-
-        if (this.keyboard.getState('ArrowUp') || this.keyboard.getState('KeyW')) {
-            Velocity.y[this.player] -= 1;
-        }
-
-        if (this.keyboard.getState('ArrowDown') || this.keyboard.getState('KeyS')) {
-            Velocity.y[this.player] += 1;
-        }
+        if (this.world.keyboard.getState('ArrowRight') || this.world.keyboard.getState('KeyD')) Velocity.x[this.player] += 1;
+        if (this.world.keyboard.getState('ArrowLeft') || this.world.keyboard.getState('KeyA')) Velocity.x[this.player] -= 1;
+        if (this.world.keyboard.getState('ArrowUp') || this.world.keyboard.getState('KeyW')) Velocity.y[this.player] -= 1;
+        if (this.world.keyboard.getState('ArrowDown') || this.world.keyboard.getState('KeyS')) Velocity.y[this.player] += 1;
 
         this.updateSystems();
     }

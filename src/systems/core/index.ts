@@ -1,10 +1,11 @@
 import { InventoryEnum } from '@/assets/inventory/types';
 import { Inventory } from '@/components/inventory';
 import { createInventoryData, InventoryData } from '@/data/inventory';
-import { defineQuery, IWorld } from 'bitecs';
+import { defineQuery } from 'bitecs';
+import { CreateCoreProps } from './types';
 import { createInitializeData } from './utils';
 
-export function createCore(world: IWorld) {
+export function createCore({ world }: CreateCoreProps) {
     const initializeInventory = createInitializeData({
         componentRef: Inventory.index,
         query: defineQuery([Inventory]),
@@ -13,6 +14,6 @@ export function createCore(world: IWorld) {
     });
 
     return () => {
-        initializeInventory(world);
+        initializeInventory(world.bitworld);
     };
 }

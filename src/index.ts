@@ -4,12 +4,9 @@ import { SpriteScene } from './scenes/sprites';
 
 async function init() {
     const application = new Application();
-    const scene = new SpriteScene({ application });
-
-    if (await application.enterScene(scene)) {
-        const $app = document.querySelector('#app')!;
-        $app.append(scene.screen.texture);
-    }
+    const $container = document.querySelector('#app') as HTMLElement;
+    const scene = new SpriteScene({ application, $container });
+    await application.enterScene(scene);
 }
 
 document.addEventListener('DOMContentLoaded', init);

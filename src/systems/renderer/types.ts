@@ -1,14 +1,5 @@
-import { IWorld } from 'bitecs';
-import { Camera } from './camera';
+import { World } from '@/core/world';
 
-export type RendererProps = {
-    world: IWorld;
-    context: CanvasRenderingContext2D;
-    camera: Camera;
-};
-
-export type CameraProps = {
-    x?: number;
-    y?: number;
-    scale?: number;
+export type CreateRendererProps = {
+    world: World;
 };

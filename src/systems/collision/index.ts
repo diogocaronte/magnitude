@@ -31,12 +31,14 @@ export function createCollision({ world }: CreateCollisionProps) {
     });
 
     return () => {
-        initializeCollision(world);
-        initializeCircle(world);
+        const { bitworld } = world;
+
+        initializeCollision(bitworld);
+        initializeCircle(bitworld);
 
         quadtree.clear();
 
-        for (const entity of circles(world)) {
+        for (const entity of circles(bitworld)) {
             const index = CircleCollision.index[entity];
 
             const instance = CircleQuadtreeData[index];
@@ -50,7 +52,7 @@ export function createCollision({ world }: CreateCollisionProps) {
             quadtree.insert(instance);
         }
 
-        for (const entity of players(world)) {
+        for (const entity of players(bitworld)) {
             const instance = new Circle({
                 x: Position.x[entity],
                 y: Position.y[entity],
