@@ -5,8 +5,8 @@ import { Size } from '@/components/size';
 import { defineQuery, IWorld } from 'bitecs';
 
 export function createBound(world: IWorld) {
-    const rectangles = defineQuery([Rectangle, Position]);
-    const entities = defineQuery([Position]);
+    const rectangles = defineQuery([Rectangle, Position, Size]);
+    const entities = defineQuery([Position, Radius]);
 
     return () => {
         const _entities = entities(world);
@@ -14,14 +14,16 @@ export function createBound(world: IWorld) {
             for (const entity of _entities) {
                 if (rectangle === entity) continue;
 
-                if (Position.x[entity] - Radius.value[entity] >= 0 &&
-                    Position.x[entity] + Radius.value[entity] <= Size.width[rectangle] &&
-                    Position.y[entity] - Radius.value[entity] >= 0 &&
-                    Position.y[entity] + Radius.value[entity] <= Size.height[rectangle]
-                ){
-                    Position.x[entity] -= 1;
-                    Position.y[entity] -= 1;
+                if (Size.width[rectangle] + Position.x[rectangle] - Position.x[entity]<= 0) {
+                    Position.x[entity] = Position.x[rectangle]
+                    console.log('%csrc\systems\bound.ts:18 Position.x[entity]', 'color: #007acc;', Position.x[entity]);
                 }
+                if (Size.height[rectangle] + Position.y[rectangle] - Position.y[entity] <= 0) {
+                    Position.y[entity] = Position.y[rectangle]
+                    console.log('%csrc\systems\bound.ts:23 Position.x[entity]', 'color: #007acc;', Position.x[entity]);
+                }
+               
+                
             }
         }
     };
