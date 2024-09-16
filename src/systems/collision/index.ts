@@ -68,7 +68,7 @@ export function createCollision({ world }: CreateCollisionProps) {
                 const diff_y = Transform.y[bullet] - Transform.y[enemy];
 
                 const radius = Radius.value[bullet] + Radius.value[enemy];
-                if (Math.hypot(diff_x, diff_y) > radius) continue;
+                if (Math.sqrt(diff_x * diff_x + diff_y * diff_y) > radius) continue;
 
                 const index = EnemyCollision.index[enemy];
                 const data = EnemyCollisionData[index];
