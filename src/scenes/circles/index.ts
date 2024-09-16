@@ -3,7 +3,7 @@ import { PortalAppearenceEnum } from '@/assets/portal/types';
 import { addCircleCollision } from '@/components/circle/collision';
 import { addFriction } from '@/components/friction';
 import { addInventory } from '@/components/inventory';
-import { Position } from '@/components/position';
+import { Transform } from '@/components/transform';
 import { addTTL } from '@/components/ttl';
 import { addVelocity, Velocity } from '@/components/velocity';
 import { Application } from '@/core/application';
@@ -101,8 +101,8 @@ export class CircleScene implements Scene {
     }
 
     render() {
-        const diff_x = Position.x[this.player] - this.world.camera.x;
-        const diff_y = Position.y[this.player] - this.world.camera.y;
+        const diff_x = Transform.x[this.player] - this.world.camera.x;
+        const diff_y = Transform.y[this.player] - this.world.camera.y;
 
         this.world.camera.x += diff_x * 0.1;
         this.world.camera.y += diff_y * 0.1;

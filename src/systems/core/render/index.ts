@@ -1,9 +1,9 @@
 import { CreateCoreRenderSystemProps } from './types';
 
 export function createCoreRenderSystem({ world }: CreateCoreRenderSystemProps) {
-    const { camera, screen, viewport } = world;
-
     return () => {
+        const { camera, screen, viewport, pointer, mouse } = world;
+
         screen.context.imageSmoothingEnabled = false;
         if (!screen.isClientSize()) screen.toClientSize();
 
@@ -19,5 +19,8 @@ export function createCoreRenderSystem({ world }: CreateCoreRenderSystemProps) {
         viewport.right = viewport.x + viewport.halfWidth;
         viewport.top = viewport.y - viewport.halfHeight;
         viewport.bottom = viewport.y + viewport.halfHeight;
+
+        pointer.x = mouse.x + viewport.x - viewport.halfWidth;
+        pointer.y = mouse.y + viewport.y - viewport.halfHeight;
     };
 }

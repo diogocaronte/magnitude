@@ -3,6 +3,8 @@ export class MouseControl {
 
     x: number = 0;
     y: number = 0;
+    worldX: number = 0;
+    worldY: number = 0;
 
     constructor() {
         this._states = new Map();

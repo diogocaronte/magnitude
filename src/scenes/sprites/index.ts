@@ -1,10 +1,11 @@
 import { SpriteEnum } from '@/assets/sprite/types';
 import { addFriction } from '@/components/friction';
-import { Position } from '@/components/position';
+import { Transform } from '@/components/transform';
 import { addVelocity, Velocity } from '@/components/velocity';
 import { Application } from '@/core/application';
 import { Scene } from '@/core/application/types';
 import { World } from '@/core/world';
+import { createHero } from '@/entities/hero';
 import { createSprite } from '@/entities/sprite';
 import { createCore } from '@/systems/core';
 import { createCoreRenderSystem } from '@/systems/core/render';
@@ -28,10 +29,8 @@ export class SpriteScene implements Scene {
         this.$container = props.$container;
         this.world = new World();
 
-        this.player = createSprite(this.world.bitworld, {
-            sprite: SpriteEnum.SAMPLE,
-            w: 64,
-            h: 64,
+        this.player = createHero(this.world.bitworld, {
+            radius: 20,
         });
         addVelocity(this.world.bitworld, this.player, 0, 0);
         addFriction(this.world.bitworld, this.player, 0.9, 0.9);
@@ -59,8 +58,8 @@ export class SpriteScene implements Scene {
     }
 
     render() {
-        const diff_x = Position.x[this.player] - this.world.camera.x;
-        const diff_y = Position.y[this.player] - this.world.camera.y;
+        const diff_x = Transform.x[this.player] - this.world.camera.x;
+        const diff_y = Transform.y[this.player] - this.world.camera.y;
 
         this.world.camera.x += diff_x * 0.1;
         this.world.camera.y += diff_y * 0.1;
