@@ -7,4 +7,5 @@ export enum CircleAppearenceEnum {
     RED,
     BLUE,
     GREEN,
+    BULLET,
 }

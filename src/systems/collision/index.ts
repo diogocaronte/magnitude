@@ -1,79 +1,86 @@
+import { BulletCollision } from '@/components/bullet/collision';
 import { CircleCollision } from '@/components/circle/collision';
-import { Position } from '@/components/position';
+import { EnemyCollision } from '@/components/enemy/collision';
+import { HeroCollision } from '@/components/hero/collision';
 import { Radius } from '@/components/radius';
+import { Transform } from '@/components/transform';
+import { BulletCollisionData, createBulletCollisionData } from '@/data/bullet';
 import { CircleCollisionData, createCircleCollisionData } from '@/data/circle/collision';
-import { CircleQuadtreeData, createCircleQuadtreeData } from '@/data/circle/quadtree';
-import { IData } from '@/data/types';
-import { PlayerTag } from '@/tags/player';
-import { Circle, Indexable, Quadtree } from '@timohausmann/quadtree-ts';
-import { defineQuery } from 'bitecs';
+import { createEnemyCollisionData, EnemyCollisionData } from '@/data/enemy/collision';
+import { createHeroCollisionData, HeroCollisionData } from '@/data/hero/collision';
+import { defineQuery, removeEntity } from 'bitecs';
 import { createInitializeData } from '../core/utils';
 import { CreateCollisionProps } from './types';
 
 export function createCollision({ world }: CreateCollisionProps) {
-    const circles = defineQuery([Position, Radius, CircleCollision]);
-    const players = defineQuery([Position, Radius, CircleCollision, PlayerTag]);
+    const circles = defineQuery([Transform, Radius, CircleCollision]);
+    const enemies = defineQuery([Transform, Radius, EnemyCollision]);
+    const bullets = defineQuery([Transform, Radius, BulletCollision]);
 
-    const quadtree = new Quadtree({ x: -500, y: -500, width: 1000, height: 1000, maxObjects: 10 }) as Quadtree<Indexable & IData>;
-
-    const initializeCollision = createInitializeData({
+    const initializeCircleCollision = createInitializeData({
         componentRef: CircleCollision.index,
-        query: defineQuery([Position, Radius, CircleCollision]),
+        query: defineQuery([Transform, Radius, CircleCollision]),
         data: CircleCollisionData,
         factory: (entity: number) => createCircleCollisionData({ entity, check: false }),
     });
 
-    const initializeCircle = createInitializeData({
-        componentRef: CircleCollision.index,
-        query: defineQuery([Position, Radius, CircleCollision]),
-        data: CircleQuadtreeData,
-        factory: (entity: number) => createCircleQuadtreeData({ entity }),
+    const initializeHeroCollision = createInitializeData({
+        componentRef: HeroCollision.index,
+        query: defineQuery([Transform, Radius, HeroCollision]),
+        data: HeroCollisionData,
+        factory: (entity: number) => createHeroCollisionData({ entity }),
+    });
+
+    const initializeEnemyCollision = createInitializeData({
+        componentRef: EnemyCollision.index,
+        query: defineQuery([Transform, Radius, EnemyCollision]),
+        data: EnemyCollisionData,
+        factory: (entity: number) => createEnemyCollisionData({ entity }),
+    });
+
+    const initializeBulletCollision = createInitializeData({
+        componentRef: BulletCollision.index,
+        query: defineQuery([Transform, Radius, BulletCollision]),
+        data: BulletCollisionData,
+        factory: (entity: number) => createBulletCollisionData({ entity }),
     });
 
     return () => {
         const { bitworld } = world;
 
-        initializeCollision(bitworld);
-        initializeCircle(bitworld);
-
-        quadtree.clear();
+        initializeCircleCollision(bitworld);
+        initializeHeroCollision(bitworld);
+        initializeEnemyCollision(bitworld);
+        initializeBulletCollision(bitworld);
 
         for (const entity of circles(bitworld)) {
             const index = CircleCollision.index[entity];
-
-            const instance = CircleQuadtreeData[index];
-            instance.x = Position.x[entity] - Radius.value[entity];
-            instance.y = Position.y[entity] - Radius.value[entity];
-            instance.r = Radius.value[entity];
-
             const data = CircleCollisionData[index];
             data.check = false;
-
-            quadtree.insert(instance);
         }
 
-        for (const entity of players(bitworld)) {
-            const instance = new Circle({
-                x: Position.x[entity],
-                y: Position.y[entity],
-                r: Radius.value[entity],
-            });
+        const enemyList = enemies(bitworld);
+        for (const bullet of bullets(bitworld)) {
+            for (const enemy of enemyList) {
+                if (bullet === enemy) continue;
 
-            const candidates = quadtree.retrieve(instance);
-            for (const candidate of candidates) {
-                if (candidate.entity === entity) continue;
+                const diff_x = Transform.x[bullet] - Transform.x[enemy];
+                const diff_y = Transform.y[bullet] - Transform.y[enemy];
 
-                const index = CircleCollision.index[candidate.entity];
+                const radius = Radius.value[bullet] + Radius.value[enemy];
+                if (Math.sqrt(diff_x * diff_x + diff_y * diff_y) > radius) continue;
 
-                const distance = Math.hypot(
-                    Position.x[entity] - Position.x[candidate.entity],
-                    Position.y[entity] - Position.y[candidate.entity],
-                );
-
-                if (distance > Radius.value[entity] + Radius.value[candidate.entity]) continue;
-
-                CircleCollisionData[index].check = true;
+                const index = EnemyCollision.index[enemy];
+                const data = EnemyCollisionData[index];
+                data.hit = true;
             }
+        }
+
+        for (const enemy of enemyList) {
+            const index = EnemyCollision.index[enemy];
+            const data = EnemyCollisionData[index];
+
+            if (data.hit) removeEntity(bitworld, enemy);
         }
     };
 }

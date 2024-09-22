@@ -1,19 +1,19 @@
 import { Friction } from '@/components/friction';
-import { Position } from '@/components/position';
+import { Transform } from '@/components/transform';
 import { Velocity } from '@/components/velocity';
 import { defineQuery } from 'bitecs';
 import { CreateMovementProps } from './types';
 
 export function createMovement({ world }: CreateMovementProps) {
-    const movable = defineQuery([Position, Velocity]);
+    const movable = defineQuery([Transform, Velocity]);
     const frictionable = defineQuery([Velocity, Friction]);
 
     return () => {
         const { bitworld } = world;
 
         for (const entity of movable(bitworld)) {
-            Position.x[entity] += Velocity.x[entity];
-            Position.y[entity] += Velocity.y[entity];
+            Transform.x[entity] += Velocity.x[entity];
+            Transform.y[entity] += Velocity.y[entity];
         }
 
         for (const entity of frictionable(bitworld)) {

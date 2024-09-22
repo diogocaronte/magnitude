@@ -25,3 +25,8 @@ export type IViewportData = {
     top: number;
     bottom: number;
 };
+
+export type IPointerData = {
+    x: number;
+    y: number;
+};

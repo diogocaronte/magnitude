@@ -3,7 +3,7 @@ import { Camera } from '../camera';
 import { KeyboardControl } from '../controls/keyboard';
 import { MouseControl } from '../controls/mouse';
 import { CanvasTexture } from '../texture/canvas';
-import type { IViewportData, WorldProps } from './types';
+import type { IPointerData, IViewportData, WorldProps } from './types';
 
 export class World {
     bitworld: IWorld;
@@ -12,6 +12,7 @@ export class World {
     viewport: IViewportData;
     mouse: MouseControl;
     keyboard: KeyboardControl;
+    pointer: IPointerData;
 
     constructor(
         {
@@ -29,6 +30,7 @@ export class World {
         this.keyboard = keyboard;
 
         this.viewport = { x: 0, y: 0, scale: 0, width: 0, height: 0, halfWidth: 0, halfHeight: 0, left: 0, right: 0, top: 0, bottom: 0 };
+        this.pointer = { x: 0, y: 0 };
     }
 
     attach($container: HTMLElement) {
